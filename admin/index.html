@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>AURABOT | لوحة التحكم</title>
+<link rel="icon" href="../assets/logo-purple.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wdth,wght@62.5..100,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#1f0039; --bg2:#0b0014; --panel:#190030; --panel2:#24004a; --line:rgba(255,255,255,.16); --line2:#ffffff;
+  --text:#ffffff; --muted:#bfaed3; --brand:#a1007f; --brand2:#5a00a8; --danger:#ef4468; --ok:#2fd08a; --warn:#f5b53d; --info:#4b7bff;
+  --f-head:'Teko','Noto Sans Arabic','Tajawal',sans-serif; --f-body:'Tajawal','Noto Sans Arabic',sans-serif;
+}
+:root[data-theme="light"]{
+  --bg1:#f8f1ff; --bg2:#e9dbfa; --panel:#ffffff; --panel2:#f1e5ff; --line:rgba(90,0,168,.25); --line2:#5a00a8;
+  --text:#1d0038; --muted:#6c4f86;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;color:var(--text);font-family:var(--f-body);line-height:1.55;background:radial-gradient(ellipse 120% 80% at 50% 0%,var(--bg1),var(--bg2) 75%) fixed}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hd{font-family:var(--f-head);font-stretch:75%;font-weight:400}
+.hidden{display:none!important}
+
+/* ---------- login / denied ---------- */
+.center{min-height:100vh;display:grid;place-items:center;padding:20px}
+.gate{width:min(460px,100%);border:2px solid var(--line2);border-radius:32px;padding:34px 28px;text-align:center;
+  background:radial-gradient(circle at 50% 0%,var(--panel2),var(--panel));box-shadow:0 0 90px rgba(161,0,127,.35)}
+.gate img{width:96px;margin:0 auto 6px;display:block}
+.wm{font-family:'Unbounded',var(--f-head);font-weight:900;font-size:26px;background:linear-gradient(90deg,#5a00a8,#d1009f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.gate h1{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:40px;margin:10px 0 6px}
+.gate p{color:var(--muted);margin-bottom:18px}
+.btn{display:inline-block;border:0;border-radius:12px;background:linear-gradient(90deg,var(--brand2),var(--brand));color:#fff;padding:7px 20px;
+  font-family:var(--f-head);font-stretch:75%;font-size:21px;line-height:1.5;box-shadow:0 6px 22px rgba(161,0,127,.3)}
+.btn:hover{filter:brightness(1.12)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;border:2px solid var(--line2);box-shadow:none}
+.btn.danger{background:var(--danger);box-shadow:none}
+.btn.sm{font-size:17px;padding:2px 14px;border-radius:10px}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:rgba(0,0,0,.35);border-inline-end:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:6px}
+:root[data-theme="light"] aside{background:rgba(90,0,168,.06)}
+.brand{display:flex;align-items:center;gap:8px;padding:4px 8px 14px}
+.brand img{height:34px}
+aside nav{display:flex;flex-direction:column;gap:4px}
+aside nav a{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:14px;font-size:17px;color:var(--muted)}
+aside nav a:hover{background:rgba(161,0,127,.18);color:var(--text)}
+aside nav a.on{background:linear-gradient(90deg,var(--brand2),var(--brand));color:#fff}
+.me{margin-top:auto;border-top:1px solid var(--line);padding-top:12px;font-size:14px;color:var(--muted)}
+.me b{display:block;color:var(--text);word-break:break-all}
+.content{padding:26px clamp(14px,3vw,40px) 60px;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.top h1{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:44px;line-height:1.1}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ---------- cards / stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:22px}
+.stat{border:1px solid var(--line2);border-radius:24px;padding:16px 18px;background:radial-gradient(circle at 50% 0%,var(--panel2),var(--panel))}
+.stat span{color:var(--muted);font-size:15px}
+.stat b{display:block;font-family:var(--f-head);font-weight:500;font-size:46px;line-height:1.1;margin-top:2px;direction:ltr;text-align:right}
+.stat small{color:var(--muted);font-size:13px}
+.panel{border:1px solid var(--line);border-radius:24px;padding:18px;background:var(--panel);margin-bottom:20px}
+.panel h2{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:28px;margin-bottom:10px}
+.cols{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+.note{color:var(--muted);font-size:14px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--line);font-size:15px;vertical-align:middle}
+th{color:var(--muted);font-weight:500;white-space:nowrap;background:rgba(161,0,127,.08)}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:rgba(161,0,127,.08)}
+.ltr{direction:ltr;unicode-bidi:plaintext;text-align:right}
+.chip{display:inline-block;border-radius:999px;padding:0 10px;font-size:13px;line-height:1.8;background:var(--brand2);color:#fff;white-space:nowrap}
+.chip.new{background:var(--warn);color:#2a1d00}.chip.open,.chip.paid{background:var(--info)}
+.chip.closed,.chip.delivered,.chip.on{background:var(--ok);color:#00331e}.chip.cancelled,.chip.off{background:var(--danger)}
+.empty{border:2px dashed var(--line);border-radius:20px;padding:30px;text-align:center;color:var(--muted)}
+
+/* ---------- forms / modal ---------- */
+.field{display:block;margin-bottom:14px}.field>span{display:block;font-size:14px;color:var(--muted);margin-bottom:3px}
+.inp{width:100%;border:1px solid var(--line2);border-radius:14px;padding:9px 14px;font-size:16px;outline:0;background:var(--panel2)}
+.inp:focus{box-shadow:0 0 0 3px rgba(161,0,127,.45)}
+textarea.inp{min-height:90px;resize:vertical}
+.inp.sm{padding:3px 10px;width:auto;font-size:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chk{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(5,0,12,.72);display:flex;align-items:flex-start;justify-content:center;padding:5vh 14px;overflow:auto;backdrop-filter:blur(4px)}
+.sheet{width:min(640px,100%);border:2px solid var(--line2);border-radius:28px;padding:24px;background:radial-gradient(circle at 50% 0%,var(--panel2),var(--panel));position:relative;box-shadow:0 0 80px rgba(161,0,127,.35)}
+.sheet h2{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:34px;margin-bottom:10px}
+.sheet .x{position:absolute;top:12px;left:16px;background:none;border:0;font-size:26px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:4px 12px;margin-bottom:12px;font-size:15px}.kv dt{color:var(--muted)}.kv dd{word-break:break-word}
+.err{color:#ff8aa0;font-size:14px;min-height:20px}
+.chat{max-height:34vh;overflow:auto;display:flex;flex-direction:column;gap:8px;margin:10px 0;padding:4px}
+.msg{max-width:84%;padding:8px 14px;border-radius:18px;background:var(--panel2);border:1px solid var(--line);align-self:flex-start;white-space:pre-wrap;word-break:break-word}
+.msg.team{align-self:flex-end;background:linear-gradient(90deg,var(--brand2),var(--brand));color:#fff;border:0}
+.msg small{display:block;opacity:.7;font-size:12px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;background:#17002b;color:#fff;border:1px solid var(--brand);border-radius:14px;padding:10px 20px;max-width:90vw}
+.bars{display:flex;align-items:flex-end;gap:6px;height:180px;direction:ltr;padding-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-width:0;height:100%}
+.bar i{display:block;width:100%;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,var(--brand),var(--brand2));min-height:2px}
+.bar span{font-size:11px;color:var(--muted)}.bar em{font-style:normal;font-size:11px}
+.permgrid{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;margin-bottom:12px}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}
+  aside nav{flex-direction:row;flex-wrap:wrap}
+  .me{margin:0;border:0;padding:0}
+  .cols,.g2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot,
+         query, where, orderBy, limit, writeBatch, serverTimestamp, Timestamp, getCountFromServer,
+         getAggregateFromServer, sum }
+  from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { firebaseConfig } from "../firebase-config.js";
+
+/* ============================================================
+   ثوابت وصلاحيات
+   مهم: لازم تطابق firestore.rules (الدالة builtinPerms). الـ Rules هي اللي بتفرض فعليًا.
+   ============================================================ */
+const FOUNDER = "barqelhadidy@gmail.com";           // المالك الرئيسي الدائم
+const SECTIONS = {
+  overview: "نظرة عامة", orders: "الطلبات", tickets: "التذاكر", products: "المنتجات",
+  discounts: "أكواد الخصم", payments: "طرق الدفع", team: "الفريق", roles: "الأدوار"
+};
+const BUILTIN = {
+  receiver:  { rank: 1, label: "مستقبل طلبات", perms: { overview: 1, orders: 2, tickets: 2 } },
+  admin:     { rank: 2, label: "ادمن",          perms: { overview: 1, orders: 2, tickets: 2, products: 2, team: 2 } },
+  owner:     { rank: 3, label: "أونر",           perms: { overview: 1, orders: 2, tickets: 2, products: 2, team: 2, discounts: 2 } },
+  mainowner: { rank: 4, label: "المالك",         perms: { overview: 2, orders: 2, tickets: 2, products: 2, team: 2, discounts: 2, payments: 2, roles: 2 } }
+};
+const STATUS = { new: "تم الطلب", paid: "تم الدفع", delivered: "تم التسليم", cancelled: "ملغي" };
+const TSTATUS = { new: "جديدة", open: "مفتوحة", closed: "مغلقة" };
+const TTYPE = { support: "طلب دعم فني", complaint: "شكوى", inquiry: "استفسار" };
+const LEVELS = ["ممنوع", "عرض", "إدارة"];
+
+/* ============================================================
+   أدوات
+   ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = n => Number(n || 0).toLocaleString("en-US");
+const fmtDate = ts => { try { return new Intl.DateTimeFormat("ar-EG-u-nu-latn", { dateStyle: "medium", timeStyle: "short" }).format(ts.toDate()); } catch { return "—"; } };
+const intOrNull = v => { const n = parseInt(String(v).trim(), 10); return Number.isFinite(n) ? n : null; };
+const ms = ts => ts?.toMillis?.() || 0;
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3800); }
+const errText = e => e?.code === "permission-denied" ? "الصلاحيات (Rules) رفضت العملية دي." : "حصل خطأ: " + (e?.code || e?.message || "غير معروف");
+
+let modalEl = null;
+function openModal(html, mount) {
+  closeModal();
+  modalEl = document.createElement("div"); modalEl.className = "modal";
+  modalEl.innerHTML = `<div class="sheet" role="dialog" aria-modal="true"><button class="x" aria-label="إغلاق" data-close>×</button>${html}</div>`;
+  modalEl.addEventListener("mousedown", e => { if (e.target === modalEl) closeModal(); });
+  modalEl.addEventListener("click", e => { if (e.target.closest("[data-close]")) closeModal(); });
+  document.body.appendChild(modalEl); mount && mount(modalEl); return modalEl;
+}
+function closeModal() { if (modalEl) { modalEl._cleanup && modalEl._cleanup(); modalEl.remove(); modalEl = null; } }
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+const root = document.documentElement;
+root.dataset.theme = store.get("aura-admin-theme") === "light" ? "light" : "dark";
+
+/* ============================================================
+   إعدادات Firebase
+   ============================================================ */
+const cfgOk = Object.values(firebaseConfig).every(v => typeof v === "string" && v.trim() && !/[^\x00-\x7F]/.test(v));
+if (!cfgOk) {
+  $("#app").innerHTML = `<div class="center"><div class="gate"><h1>محتاج تضيف إعدادات Firebase</h1>
+    <p>افتح الملف <b dir="ltr">firebase-config.js</b> في جذر المشروع واستبدل الجُمل العربية بقيم مشروعك، واعمل Commit وحدّث الصفحة.</p></div></div>`;
+} else { main(); }
+
+function main() {
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+
+  let me = null;                // { user, email, role, label, rank, perms, founder }
+  let customRoles = {};         // roles المخصصة { key: {name, rank, perms} }
+  let cleanups = [];            // اشتراكات الـ view الحالي
+  let rolesUnsub = null;
+  const lvl = s => (me?.perms?.[s]) || 0;
+  const isMain = () => (me?.rank || 0) >= 4;
+
+  /* ---------------- شاشات الدخول ---------------- */
+  const gate = (title, msg, extra = "") => {
+    $("#app").innerHTML = `<div class="center"><div class="gate"><img src="../assets/logo-purple.png" alt=""><div class="wm">AURABOT</div>
+      <h1>${title}</h1><p>${msg}</p>${extra}</div></div>`;
+  };
+  const showLogin = () => {
+    gate("لوحة التحكم", "سجّل الدخول بحساب Google. الدخول متاح بس لأعضاء الفريق المضافين من الإدارة.",
+      `<button class="btn" id="login">تسجيل الدخول بـ Google</button><div class="err" id="lerr" style="margin-top:10px"></div>`);
+    $("#login").onclick = async () => {
+      try { await signInWithPopup(auth, provider); }
+      catch (e) {
+        const m = e.code === "auth/popup-blocked" ? "المتصفح منع نافذة الدخول، اسمح بالـ popups للموقع"
+          : e.code === "auth/unauthorized-domain" ? "الدومين مش مضاف في Firebase (Authentication > Settings > Authorized domains)"
+          : ["auth/popup-closed-by-user", "auth/cancelled-popup-request"].includes(e.code) ? "" : "فشل تسجيل الدخول: " + (e.code || "");
+        $("#lerr").textContent = m;
+      }
+    };
+  };
+  const showDenied = (email, why) => {
+    gate("غير مصرّح لك", `${esc(why)}<br><b dir="ltr">${esc(email || "")}</b>`, `<button class="btn ghost" id="lo">تسجيل الخروج</button>`);
+    $("#lo").onclick = () => signOut(auth);
+  };
+
+  /* ---------------- التحقق من الصلاحية بعد الدخول ---------------- */
+  onAuthStateChanged(auth, async user => {
+    cleanups.forEach(f => f()); cleanups = []; rolesUnsub && rolesUnsub(); rolesUnsub = null; closeModal(); me = null; customRoles = {};
+    if (!user) { showLogin(); return; }
+    if (!user.emailVerified) { showDenied(user.email, "إيميل Google مش موثّق."); return; }
+    const email = user.email.toLowerCase();
+    try {
+      if (email === FOUNDER) {
+        me = { user, email, role: "mainowner", label: "المالك الرئيسي", rank: 5, perms: BUILTIN.mainowner.perms, founder: true };
+      } else {
+        // تسجيل الدخول بـ Google لا يمنح صلاحية: لازم يكون الإيميل في collection الفريق
+        const s = await getDoc(doc(db, "team", email));
+        if (!s.exists()) { showDenied(user.email, "الإيميل ده مش مضاف لفريق AURABOT. اطلب من الإدارة إضافتك."); return; }
+        const role = s.data().role;
+        if (BUILTIN[role]) me = { user, email, role, label: BUILTIN[role].label, rank: BUILTIN[role].rank, perms: BUILTIN[role].perms };
+        else {
+          const r = await getDoc(doc(db, "roles", role));
+          if (!r.exists()) { showDenied(user.email, "الدور المعيّن لحسابك غير موجود. كلّم المالك الرئيسي."); return; }
+          me = { user, email, role, label: r.data().name, rank: r.data().rank, perms: r.data().perms || {} };
+        }
+      }
+    } catch (e) { showDenied(user.email, "تعذّر التحقق من صلاحيتك (" + (e.code || "error") + ")."); return; }
+    // الأدوار المخصصة (لعرض أسماءها)
+    rolesUnsub = onSnapshot(collection(db, "roles"), snap => { customRoles = Object.fromEntries(snap.docs.map(d => [d.id, d.data()])); }, () => {});
+    startShell();
+  });
+
+  /* ---------------- الإطار العام ---------------- */
+  function startShell() {
+    const visible = Object.keys(SECTIONS).filter(s => s === "roles" ? isMain() : lvl(s) >= 1);
+    $("#app").innerHTML = `<div class="shell"><aside>
+        <div class="brand"><img src="../assets/logo-purple.png" alt=""><span class="wm" style="font-size:18px">AURABOT</span></div>
+        <nav>${visible.map(s => `<a href="#${s}" data-s="${s}">${SECTIONS[s]}</a>`).join("")}</nav>
+        <div class="me"><b>${esc(me.user.displayName || me.email)}</b><span dir="ltr">${esc(me.email)}</span><br><span class="chip" style="margin-top:6px">${esc(me.label)}</span>
+          <div class="row" style="margin-top:10px"><button class="btn sm ghost" id="theme">الثيم</button><button class="btn sm ghost" id="out">خروج</button></div></div>
+      </aside><main class="content" id="view"></main></div>`;
+    $("#out").onclick = () => signOut(auth);
+    $("#theme").onclick = () => { root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark"; store.set("aura-admin-theme", root.dataset.theme); };
+    window.onhashchange = () => route(visible);
+    route(visible);
+  }
+  function route(visible) {
+    let s = location.hash.replace("#", "");
+    if (!visible.includes(s)) s = visible[0];
+    cleanups.forEach(f => f()); cleanups = []; closeModal();
+    document.querySelectorAll("aside nav a").forEach(a => a.classList.toggle("on", a.dataset.s === s));
+    const el = $("#view"); el.innerHTML = "";
+    VIEWS[s](el);
+  }
+  const head = (title, actions = "") => `<div class="top"><h1>${title}</h1><div class="row">${actions}</div></div>`;
+  const listen = (q, onData, onErr) => { const u = onSnapshot(q, onData, onErr || (e => toast(errText(e)))); cleanups.push(u); return u; };
+  const table = (heads, rows, emptyMsg) => rows.length ? `<div class="tw"><table><thead><tr>${heads.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>` : `<div class="empty">${emptyMsg}</div>`;
+  const roleLabel = r => BUILTIN[r]?.label || customRoles[r]?.name || r;
+  const roleRank = r => BUILTIN[r]?.rank ?? customRoles[r]?.rank ?? 0;
+
+  /* ---------------- محادثة (طلب أو تذكرة) ---------------- */
+  function threadHtml() { return `<div class="chat" id="chat"></div><form id="cform" class="row"><input class="inp" name="text" maxlength="1000" placeholder="اكتب ردّك..." style="flex:1;min-width:160px"><button class="btn sm" type="submit">إرسال</button></form><div class="err" id="cerr"></div>`; }
+  function mountThread(m, path, afterSend) {
+    const list = $("#chat", m);
+    const un = onSnapshot(query(collection(db, ...path)), snap => {
+      const rows = snap.docs.map(d => d.data()).sort((a, b) => ms(a.createdAt) - ms(b.createdAt) || 0);
+      list.innerHTML = rows.length ? rows.map(r => `<div class="msg ${r.from === "team" ? "team" : ""}"><small>${r.from === "team" ? "الفريق" : "العميل"} · ${esc(fmtDate(r.createdAt))}</small>${esc(r.text)}</div>`).join("") : `<div class="note">مفيش رسائل لسه.</div>`;
+      list.scrollTop = list.scrollHeight;
+    }, e => { $("#cerr", m).textContent = errText(e); });
+    const prev = m._cleanup; m._cleanup = () => { un(); prev && prev(); };
+    $("#cform", m).onsubmit = async ev => {
+      ev.preventDefault(); const inp = ev.target.text, text = inp.value.trim(); if (!text) return; inp.disabled = true;
+      try {
+        const b = writeBatch(db);
+        b.set(doc(collection(db, ...path)), { from: "team", uid: me.user.uid, text, createdAt: serverTimestamp() });
+        afterSend && afterSend(b);
+        await b.commit(); inp.value = "";
+      } catch (e) { $("#cerr", m).textContent = errText(e); }
+      inp.disabled = false; inp.focus();
+    };
+  }
+
+  /* ============================================================
+     نظرة عامة
+     ============================================================ */
+  function viewOverview(el) {
+    el.innerHTML = head("نظرة عامة") + `
+      <div class="stats">
+        <div class="stat"><span>إجمالي المبيعات</span><b id="s-sales">—</b><small>ج.م (طلبات مدفوعة/مسلّمة)</small></div>
+        <div class="stat"><span>إجمالي الطلبات</span><b id="s-orders">—</b><small>كل الطلبات</small></div>
+        <div class="stat"><span>متوسط معدل التحويل</span><b id="s-conv">—</b><small id="s-conv-n">آخر 30 يوم: الطلبات ÷ الزيارات الفريدة</small></div>
+        <div class="stat"><span>طلبات جديدة</span><b id="s-new">—</b><small>حالة «تم الطلب»</small></div>
+        <div class="stat"><span>تذاكر دعم جديدة</span><b id="s-tk">—</b><small>لسه محدش رد عليها</small></div>
+      </div>
+      <div class="cols"><div class="panel"><h2>مبيعات آخر 14 يوم (ج.م)</h2><div id="chart"></div></div>
+      <div class="panel"><h2>أحدث الطلبات</h2><div id="recent"></div></div></div>`;
+    let cache = [];
+    const set = (id, v) => { const n = $("#" + id); if (n) n.textContent = v; };
+    const paid = o => o.status === "paid" || o.status === "delivered";
+    let t = null;
+    const aggregates = () => { clearTimeout(t); t = setTimeout(async () => {
+      try { const c = await getCountFromServer(collection(db, "orders")); set("s-orders", fmt(c.data().count)); } catch { set("s-orders", "—"); }
+      try {
+        const r = await getAggregateFromServer(query(collection(db, "orders"), where("status", "in", ["paid", "delivered"])), { s: sum("total") });
+        set("s-sales", fmt(r.data().s));
+      } catch { // لو الـ index لسه مش مفعّل: حساب من آخر 500 طلب محمّلين
+        set("s-sales", fmt(cache.filter(paid).reduce((a, o) => a + (o.total || 0), 0)));
+      }
+      try {
+        const since = new Date(Date.now() - 30 * 864e5), day = since.toISOString().slice(0, 10);
+        const o = (await getCountFromServer(query(collection(db, "orders"), where("createdAt", ">=", Timestamp.fromDate(since))))).data().count;
+        const v = (await getCountFromServer(query(collection(db, "visits"), where("d", ">=", day)))).data().count;
+        set("s-conv", v ? (o / v * 100).toFixed(1) + "%" : "—"); set("s-conv-n", `آخر 30 يوم: ${fmt(o)} طلب ÷ ${fmt(v)} زيارة فريدة`);
+      } catch { set("s-conv", "—"); }
+    }, 250); };
+    cleanups.push(() => clearTimeout(t));
+    listen(query(collection(db, "orders"), orderBy("createdAt", "desc"), limit(500)), snap => {
+      cache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      // رسم المبيعات
+      const days = []; for (let i = 13; i >= 0; i--) { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i); days.push({ d, v: 0 }); }
+      cache.filter(paid).forEach(o => { const x = new Date(ms(o.createdAt)); x.setHours(0, 0, 0, 0); const row = days.find(r => r.d.getTime() === x.getTime()); if (row) row.v += o.total || 0; });
+      const max = Math.max(1, ...days.map(r => r.v));
+      $("#chart").innerHTML = `<div class="bars">${days.map(r => `<div class="bar" title="${fmt(r.v)} ج.م"><em>${r.v ? fmt(r.v) : ""}</em><i style="height:${Math.round(r.v / max * 140)}px"></i><span>${r.d.getDate()}/${r.d.getMonth() + 1}</span></div>`).join("")}</div>`;
+      $("#recent").innerHTML = cache.length ? cache.slice(0, 6).map(o => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><span dir="ltr">#${esc(o.id.slice(0, 6).toUpperCase())}</span><span>${esc(o.productName)}</span><span class="chip ${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span></div>`).join("") : `<div class="note">مفيش طلبات لسه.</div>`;
+      aggregates();
+    });
+    listen(query(collection(db, "orders"), where("status", "==", "new")), s => set("s-new", fmt(s.size)), () => set("s-new", "—"));
+    listen(query(collection(db, "tickets"), where("status", "==", "new")), s => set("s-tk", fmt(s.size)), () => set("s-tk", "—"));
+  }
+
+  /* ============================================================
+     الطلبات
+     ============================================================ */
+  function viewOrders(el) {
+    el.innerHTML = head("الطلبات") + `<div class="row" style="margin-bottom:14px"><select class="inp sm" id="f-status"><option value="">كل الحالات</option>${Object.entries(STATUS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select>
+      <input class="inp sm" id="f-q" placeholder="بحث بالاسم / الديسكورد / رقم الطلب" style="min-width:260px"></div><div id="tb"></div>`;
+    let rows = [];
+    const draw = () => {
+      const st = $("#f-status").value, q = $("#f-q").value.trim().toLowerCase();
+      const f = rows.filter(o => (!st || o.status === st) && (!q || [o.customerName, o.discord, o.id, o.email, o.productName].join(" ").toLowerCase().includes(q)));
+      $("#tb").innerHTML = table(["رقم", "التاريخ", "العميل", "ديسكورد", "المنتج", "الإجمالي", "الحالة", ""], f.map(o => `<tr>
+        <td class="ltr">#${esc(o.id.slice(0, 6).toUpperCase())}</td><td>${esc(fmtDate(o.createdAt))}</td><td>${esc(o.customerName)}</td><td class="ltr">${esc(o.discord)}</td>
+        <td>${esc(o.productName)}</td><td>${fmt(o.total)} ج.م</td>
+        <td><select class="inp sm" data-st="${esc(o.id)}" ${lvl("orders") >= 2 ? "" : "disabled"}>${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${o.status === k ? "selected" : ""}>${v}</option>`).join("")}</select></td>
+        <td><button class="btn sm" data-open="${esc(o.id)}">تفاصيل</button></td></tr>`), "مفيش طلبات مطابقة.");
+    };
+    $("#f-status").onchange = draw; $("#f-q").oninput = draw;
+    el.onchange = async e => {
+      const s = e.target.closest("[data-st]"); if (!s) return;
+      try { await updateDoc(doc(db, "orders", s.dataset.st), { status: s.value, updatedAt: serverTimestamp() }); toast("تم تحديث الحالة"); }
+      catch (err) { toast(errText(err)); }
+    };
+    el.onclick = e => { const b = e.target.closest("[data-open]"); if (b) openOrder(rows.find(o => o.id === b.dataset.open)); };
+    listen(query(collection(db, "orders"), orderBy("createdAt", "desc"), limit(300)), snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })); draw(); });
+  }
+  function openOrder(o) {
+    if (!o) return;
+    openModal(`<h2>الطلب #${esc(o.id.slice(0, 6).toUpperCase())}</h2><dl class="kv">
+      <dt>الحالة</dt><dd><span class="chip ${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span></dd>
+      <dt>العميل</dt><dd>${esc(o.customerName)}</dd><dt>ديسكورد</dt><dd class="ltr">${esc(o.discord)}</dd><dt>الإيميل</dt><dd class="ltr">${esc(o.email)}</dd>
+      <dt>المنتج</dt><dd>${esc(o.productName)}</dd><dt>سعر المنتج</dt><dd>${fmt(o.unitPrice)} ج.م</dd>
+      <dt>خصم المنتج</dt><dd>${fmt(o.productDiscount)} ج.م</dd><dt>كود الخصم</dt><dd>${o.codeUsed ? esc(o.codeUsed) + " (-" + fmt(o.codeDiscount) + " ج.م)" : "—"}</dd>
+      <dt>الإجمالي</dt><dd><b>${fmt(o.total)} ج.م</b></dd><dt>الهدية</dt><dd>${esc(o.gift || "—")}</dd><dt>ملاحظات العميل</dt><dd>${esc(o.notes || "—")}</dd>
+      <dt>التاريخ</dt><dd>${esc(fmtDate(o.createdAt))}</dd></dl>
+      <h2 style="font-size:26px">دردشة الطلب</h2>${threadHtml()}
+      ${isMain() ? `<div style="margin-top:14px"><button class="btn sm danger" id="del">حذف نهائي للطلب</button></div>` : ""}`,
+      m => {
+        mountThread(m, ["orders", o.id, "messages"]);
+        const d = $("#del", m);
+        d && (d.onclick = async () => {
+          if (!confirm("حذف الطلب نهائيًا مع كل رسائله؟ لا يمكن التراجع.")) return;
+          try {
+            const ms_ = await getDocs(collection(db, "orders", o.id, "messages")); const b = writeBatch(db);
+            ms_.forEach(x => b.delete(x.ref)); b.delete(doc(db, "orders", o.id)); await b.commit(); closeModal(); toast("تم الحذف");
+          } catch (e) { toast(errText(e)); }
+        });
+      });
+  }
+
+  /* ============================================================
+     التذاكر
+     ============================================================ */
+  function viewTickets(el) {
+    el.innerHTML = head("التذاكر") + `<select class="inp sm" id="f-status" style="margin-bottom:14px"><option value="">كل الحالات</option>${Object.entries(TSTATUS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select><div id="tb"></div>`;
+    let rows = [];
+    const draw = () => {
+      const st = $("#f-status").value, f = rows.filter(t => !st || t.status === st);
+      $("#tb").innerHTML = table(["التاريخ", "العميل", "النوع", "العنوان", "الحالة", ""], f.map(t => `<tr><td>${esc(fmtDate(t.createdAt))}</td><td class="ltr">${esc(t.email)}</td><td>${esc(TTYPE[t.type] || "")}</td><td>${esc(t.title)}</td>
+        <td><span class="chip ${esc(t.status)}">${esc(TSTATUS[t.status] || t.status)}</span></td><td><button class="btn sm" data-open="${esc(t.id)}">فتح</button></td></tr>`), "مفيش تذاكر.");
+    };
+    $("#f-status").onchange = draw;
+    el.onclick = e => { const b = e.target.closest("[data-open]"); if (b) openTicket(rows.find(t => t.id === b.dataset.open)); };
+    listen(query(collection(db, "tickets"), orderBy("lastReplyAt", "desc"), limit(300)), snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })); draw(); });
+  }
+  function openTicket(t) {
+    if (!t) return;
+    const canManage = lvl("tickets") >= 2;
+    openModal(`<h2>${esc(t.title)}</h2><dl class="kv"><dt>العميل</dt><dd class="ltr">${esc(t.email)}</dd><dt>النوع</dt><dd>${esc(TTYPE[t.type] || "")}</dd><dt>التاريخ</dt><dd>${esc(fmtDate(t.createdAt))}</dd>
+      <dt>الحالة</dt><dd><select class="inp sm" id="tst" ${canManage ? "" : "disabled"}>${Object.entries(TSTATUS).map(([k, v]) => `<option value="${k}" ${t.status === k ? "selected" : ""}>${v}</option>`).join("")}</select></dd></dl>
+      <div class="panel" style="white-space:pre-wrap;word-break:break-word">${esc(t.body)}</div>${canManage ? threadHtml() : `<div class="chat" id="chat"></div>`}
+      ${isMain() ? `<div style="margin-top:14px"><button class="btn sm danger" id="del">حذف نهائي للتذكرة</button></div>` : ""}`,
+      m => {
+        if (canManage) {
+          mountThread(m, ["tickets", t.id, "messages"], b => b.update(doc(db, "tickets", t.id), { status: t.status === "closed" ? "closed" : "open", lastReplyAt: serverTimestamp() }));
+          $("#tst", m).onchange = async ev => { try { await updateDoc(doc(db, "tickets", t.id), { status: ev.target.value, lastReplyAt: serverTimestamp() }); toast("تم تحديث الحالة"); } catch (e) { toast(errText(e)); } };
+        } else {
+          const list = $("#chat", m);
+          m._cleanup = onSnapshot(query(collection(db, "tickets", t.id, "messages")), snap => {
+            list.innerHTML = snap.docs.map(d => d.data()).sort((a, b) => ms(a.createdAt) - ms(b.createdAt)).map(r => `<div class="msg ${r.from === "team" ? "team" : ""}">${esc(r.text)}</div>`).join("");
+          });
+        }
+        const d = $("#del", m);
+        d && (d.onclick = async () => {
+          if (!confirm("حذف التذكرة نهائيًا مع كل ردودها؟")) return;
+          try { const s = await getDocs(collection(db, "tickets", t.id, "messages")); const b = writeBatch(db); s.forEach(x => b.delete(x.ref)); b.delete(doc(db, "tickets", t.id)); await b.commit(); closeModal(); toast("تم الحذف"); }
+          catch (e) { toast(errText(e)); }
+        });
+      });
+  }
+
+  /* ============================================================
+     المنتجات
+     ============================================================ */
+  function viewProducts(el) {
+    const manage = lvl("products") >= 2;
+    el.innerHTML = head("المنتجات", manage ? `<button class="btn" id="add">+ منتج جديد</button>` : "") + `<div id="tb"></div>`;
+    let rows = [];
+    const draw = () => {
+      $("#tb").innerHTML = table(["الاسم", "السعر", "الخصم", "الهدية", "الأكثر شراءً", "الحالة", ""], rows.map(p => `<tr><td>${esc(p.name)}</td><td>${fmt(p.price)} ج.م</td>
+        <td>${p.discountType === "percent" ? p.discountValue + "%" : p.discountType === "fixed" ? fmt(p.discountValue) + " ج.م" : "—"}</td><td>${esc(p.gift || "—")}</td>
+        <td>${p.featured ? "نعم" : "—"}</td><td><span class="chip ${p.active ? "on" : "off"}">${p.active ? "ظاهر" : "مخفي"}</span></td>
+        <td>${manage ? `<button class="btn sm" data-edit="${esc(p.id)}">تعديل</button> <button class="btn sm danger" data-del="${esc(p.id)}">حذف</button>` : ""}</td></tr>`), "مفيش منتجات. اضغط «منتج جديد».");
+    };
+    el.onclick = async e => {
+      if (e.target.closest("#add")) return productForm(null);
+      const ed = e.target.closest("[data-edit]"), dl = e.target.closest("[data-del]");
+      if (ed) productForm(rows.find(p => p.id === ed.dataset.edit));
+      if (dl && confirm("حذف المنتج؟ (الطلبات القديمة هتفضل محفوظة)")) { try { await deleteDoc(doc(db, "products", dl.dataset.del)); toast("تم الحذف"); } catch (err) { toast(errText(err)); } }
+    };
+    listen(collection(db, "products"), snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => ms(a.createdAt) - ms(b.createdAt)); draw(); });
+  }
+  function productForm(p) {
+    const v = p || { name: "", price: "", description: "", details: "", discountType: "none", discountValue: 0, gift: "", featured: false, active: true };
+    openModal(`<h2>${p ? "تعديل منتج" : "منتج جديد"}</h2><form id="pf" novalidate>
+      <label class="field"><span>اسم المنتج *</span><input class="inp" name="name" maxlength="80" value="${esc(v.name)}"></label>
+      <div class="g2"><label class="field"><span>السعر بالجنيه المصري (EGP) *</span><input class="inp" name="price" type="number" min="0" step="1" value="${esc(v.price)}"></label>
+        <label class="field"><span>الخصم (اختياري)</span><select class="inp" name="dtype"><option value="none" ${v.discountType === "none" ? "selected" : ""}>بدون خصم</option><option value="fixed" ${v.discountType === "fixed" ? "selected" : ""}>مبلغ ثابت (ج.م)</option><option value="percent" ${v.discountType === "percent" ? "selected" : ""}>نسبة مئوية (%)</option></select></label></div>
+      <label class="field"><span>قيمة الخصم</span><input class="inp" name="dvalue" type="number" min="0" step="1" value="${esc(v.discountValue)}"></label>
+      <label class="field"><span>وصف المنتج</span><textarea class="inp" name="description" maxlength="4000">${esc(v.description)}</textarea></label>
+      <label class="field"><span>تفاصيل المنتج</span><textarea class="inp" name="details" maxlength="8000">${esc(v.details)}</textarea></label>
+      <label class="field"><span>هدية مجانية (اختياري) — اسم الهدية</span><input class="inp" name="gift" maxlength="120" value="${esc(v.gift)}"></label>
+      <label class="chk"><input type="checkbox" name="featured" ${v.featured ? "checked" : ""}> يظهر في «الاكثر شرائا» في الصفحة الرئيسية</label>
+      <label class="chk"><input type="checkbox" name="active" ${v.active ? "checked" : ""}> ظاهر في المتجر</label>
+      <div class="err" id="err"></div><div class="row"><button class="btn" type="submit">حفظ</button><button class="btn ghost" type="button" data-close>إلغاء</button></div></form>`, m => {
+      $("#pf", m).onsubmit = async ev => {
+        ev.preventDefault(); const f = ev.target, err = $("#err", m); err.textContent = "";
+        const price = intOrNull(f.price.value), dtype = f.dtype.value, dval = dtype === "none" ? 0 : intOrNull(f.dvalue.value);
+        if (!f.name.value.trim()) return err.textContent = "اسم المنتج مطلوب";
+        if (price == null || price < 0) return err.textContent = "السعر لازم يكون رقم صحيح";
+        if (dval == null || dval < 0) return err.textContent = "قيمة الخصم غير صحيحة";
+        if (dtype === "percent" && dval > 100) return err.textContent = "النسبة لا تزيد عن 100";
+        if (dtype === "fixed" && dval > price) return err.textContent = "الخصم أكبر من السعر";
+        const data = { name: f.name.value.trim(), price, description: f.description.value.trim(), details: f.details.value.trim(), discountType: dtype, discountValue: dval,
+          gift: f.gift.value.trim(), featured: f.featured.checked, active: f.active.checked, createdAt: p?.createdAt || serverTimestamp(), updatedAt: serverTimestamp() };
+        try { await setDoc(p ? doc(db, "products", p.id) : doc(collection(db, "products")), data); closeModal(); toast("تم الحفظ"); }
+        catch (e) { err.textContent = errText(e); }
+      };
+    });
+  }
+
+  /* ============================================================
+     أكواد الخصم
+     ============================================================ */
+  function viewDiscounts(el) {
+    const manage = lvl("discounts") >= 2;
+    el.innerHTML = head("أكواد الخصم", manage ? `<button class="btn" id="add">+ كود جديد</button>` : "") + `<div id="tb"></div>`;
+    let rows = [], products = [];
+    const pname = id => products.find(p => p.id === id)?.name || "—";
+    const draw = () => {
+      $("#tb").innerHTML = table(["الكود", "الخصم", "ينتهي", "الاستخدام", "حد أدنى", "المنتج", "الحالة", ""], rows.map(c => {
+        const expired = c.expiresAt && ms(c.expiresAt) < Date.now();
+        return `<tr><td class="ltr"><b>${esc(c.id)}</b></td><td>${c.type === "percent" ? c.value + "%" : fmt(c.value) + " ج.م"}</td><td>${c.expiresAt ? esc(new Intl.DateTimeFormat("ar-EG-u-nu-latn", { dateStyle: "medium" }).format(c.expiresAt.toDate())) : "—"}</td>
+        <td>${fmt(c.usedCount)}${c.maxUses != null ? " / " + fmt(c.maxUses) : ""}</td><td>${c.minOrder != null ? fmt(c.minOrder) + " ج.م" : "—"}</td><td>${c.productId ? esc(pname(c.productId)) : "كل المنتجات"}</td>
+        <td><span class="chip ${c.active && !expired ? "on" : "off"}">${expired ? "منتهي" : c.active ? "شغّال" : "متوقف"}</span></td>
+        <td>${manage ? `<button class="btn sm" data-edit="${esc(c.id)}">تعديل</button> <button class="btn sm danger" data-del="${esc(c.id)}">حذف</button>` : ""}</td></tr>`; }), "مفيش أكواد خصم.");
+    };
+    el.onclick = async e => {
+      if (e.target.closest("#add")) return codeForm(null, products);
+      const ed = e.target.closest("[data-edit]"), dl = e.target.closest("[data-del]");
+      if (ed) codeForm(rows.find(c => c.id === ed.dataset.edit), products);
+      if (dl && confirm("حذف الكود؟")) { try { await deleteDoc(doc(db, "discountCodes", dl.dataset.del)); toast("تم الحذف"); } catch (err) { toast(errText(err)); } }
+    };
+    getDocs(collection(db, "products")).then(s => { products = s.docs.map(d => ({ id: d.id, ...d.data() })); draw(); }).catch(() => {});
+    listen(collection(db, "discountCodes"), snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => ms(b.createdAt) - ms(a.createdAt)); draw(); });
+  }
+  function codeForm(c, products) {
+    const v = c || { id: "", type: "percent", value: "", expiresAt: null, maxUses: null, minOrder: null, productId: null, active: true, usedCount: 0 };
+    const dateVal = v.expiresAt ? v.expiresAt.toDate().toISOString().slice(0, 10) : "";
+    openModal(`<h2>${c ? "تعديل كود" : "كود خصم جديد"}</h2><form id="cf" novalidate>
+      <label class="field"><span>الكود * (حروف إنجليزي كبيرة وأرقام و - _ )</span><input class="inp ltr" name="code" maxlength="24" value="${esc(v.id)}" ${c ? "disabled" : ""} style="text-transform:uppercase"></label>
+      <div class="g2"><label class="field"><span>نوع الخصم</span><select class="inp" name="type"><option value="percent" ${v.type === "percent" ? "selected" : ""}>نسبة مئوية (%)</option><option value="fixed" ${v.type === "fixed" ? "selected" : ""}>مبلغ ثابت (ج.م)</option></select></label>
+        <label class="field"><span>القيمة *</span><input class="inp" name="value" type="number" min="1" step="1" value="${esc(v.value)}"></label></div>
+      <div class="g2"><label class="field"><span>تاريخ الانتهاء (اختياري)</span><input class="inp" name="exp" type="date" value="${dateVal}"></label>
+        <label class="field"><span>أقصى عدد استخدامات (اختياري)</span><input class="inp" name="max" type="number" min="1" step="1" value="${v.maxUses ?? ""}"></label></div>
+      <div class="g2"><label class="field"><span>حد أدنى للطلب بالجنيه (اختياري)</span><input class="inp" name="min" type="number" min="0" step="1" value="${v.minOrder ?? ""}"></label>
+        <label class="field"><span>يخص منتج معيّن (اختياري)</span><select class="inp" name="prod"><option value="">كل المنتجات</option>${products.map(p => `<option value="${esc(p.id)}" ${v.productId === p.id ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select></label></div>
+      <label class="chk"><input type="checkbox" name="active" ${v.active ? "checked" : ""}> الكود شغّال</label>
+      <div class="err" id="err"></div><div class="row"><button class="btn" type="submit">حفظ</button><button class="btn ghost" type="button" data-close>إلغاء</button></div></form>`, m => {
+      $("#cf", m).onsubmit = async ev => {
+        ev.preventDefault(); const f = ev.target, err = $("#err", m); err.textContent = "";
+        const code = (c ? c.id : f.code.value.trim().toUpperCase()), value = intOrNull(f.value.value), max = intOrNull(f.max.value), min = intOrNull(f.min.value);
+        if (!/^[A-Z0-9_-]{2,24}$/.test(code)) return err.textContent = "الكود لازم 2-24 حرف إنجليزي كبير أو رقم أو - _";
+        if (value == null || value < 1) return err.textContent = "قيمة الخصم لازم تكون 1 أو أكتر";
+        if (f.type.value === "percent" && value > 100) return err.textContent = "النسبة لا تزيد عن 100";
+        if (f.max.value.trim() && (max == null || max < 1)) return err.textContent = "أقصى استخدامات غير صحيح";
+        if (f.min.value.trim() && (min == null || min < 0)) return err.textContent = "الحد الأدنى غير صحيح";
+        const data = { code, type: f.type.value, value, expiresAt: f.exp.value ? Timestamp.fromDate(new Date(f.exp.value + "T23:59:59")) : null,
+          maxUses: f.max.value.trim() ? max : null, usedCount: c ? (c.usedCount || 0) : 0, minOrder: f.min.value.trim() ? min : null,
+          productId: f.prod.value || null, active: f.active.checked, createdAt: c?.createdAt || serverTimestamp() };
+        if (c?.lastOrderId) data.lastOrderId = c.lastOrderId;
+        try {
+          if (!c && (await getDoc(doc(db, "discountCodes", code))).exists()) return err.textContent = "الكود ده موجود بالفعل";
+          await setDoc(doc(db, "discountCodes", code), data); closeModal(); toast("تم الحفظ");
+        } catch (e) { err.textContent = errText(e); }
+      };
+    });
+  }
+
+  /* ============================================================
+     طرق الدفع (المالك الرئيسي فقط)
+     ============================================================ */
+  function viewPayments(el) {
+    el.innerHTML = head("طرق الدفع", `<button class="btn" id="add">+ طريقة دفع</button>`) + `<p class="note" style="margin-bottom:12px">طرق الدفع الظاهرة هنا بتظهر للعملاء في الموقع (الاسم في الصفحة الرئيسية، والتفاصيل والتعليمات عند الطلب).</p><div id="tb"></div>`;
+    let rows = [];
+    const draw = () => { $("#tb").innerHTML = table(["الترتيب", "الاسم", "التفاصيل", "التعليمات", "الحالة", ""], rows.map(p => `<tr><td>${esc(p.order)}</td><td>${esc(p.name)}</td><td class="ltr">${esc(p.details || "—")}</td><td>${esc((p.instructions || "—").slice(0, 80))}</td>
+      <td><span class="chip ${p.active ? "on" : "off"}">${p.active ? "ظاهرة" : "مخفية"}</span></td><td><button class="btn sm" data-edit="${esc(p.id)}">تعديل</button> <button class="btn sm danger" data-del="${esc(p.id)}">حذف</button></td></tr>`), "مفيش طرق دفع."); };
+    el.onclick = async e => {
+      if (e.target.closest("#add")) return payForm(null, rows.length + 1);
+      const ed = e.target.closest("[data-edit]"), dl = e.target.closest("[data-del]");
+      if (ed) payForm(rows.find(p => p.id === ed.dataset.edit));
+      if (dl && confirm("حذف طريقة الدفع؟")) { try { await deleteDoc(doc(db, "paymentMethods", dl.dataset.del)); toast("تم الحذف"); } catch (err) { toast(errText(err)); } }
+    };
+    listen(collection(db, "paymentMethods"), snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.order || 0) - (b.order || 0)); draw(); });
+  }
+  function payForm(p, nextOrder = 1) {
+    const v = p || { name: "", details: "", instructions: "", active: true, order: nextOrder };
+    openModal(`<h2>${p ? "تعديل طريقة دفع" : "طريقة دفع جديدة"}</h2><form id="pf" novalidate>
+      <label class="field"><span>الاسم * (مثال: فودافون كاش)</span><input class="inp" name="name" maxlength="60" value="${esc(v.name)}"></label>
+      <label class="field"><span>التفاصيل (رقم الحساب / المحفظة)</span><input class="inp ltr" name="details" maxlength="1000" value="${esc(v.details)}"></label>
+      <label class="field"><span>تعليمات الدفع</span><textarea class="inp" name="instructions" maxlength="3000">${esc(v.instructions)}</textarea></label>
+      <label class="field"><span>ترتيب الظهور</span><input class="inp" name="order" type="number" step="1" value="${esc(v.order)}"></label>
+      <label class="chk"><input type="checkbox" name="active" ${v.active ? "checked" : ""}> ظاهرة للعملاء</label>
+      <div class="err" id="err"></div><div class="row"><button class="btn" type="submit">حفظ</button><button class="btn ghost" type="button" data-close>إلغاء</button></div></form>`, m => {
+      $("#pf", m).onsubmit = async ev => {
+        ev.preventDefault(); const f = ev.target, err = $("#err", m); err.textContent = "";
+        if (!f.name.value.trim()) return err.textContent = "الاسم مطلوب";
+        const data = { name: f.name.value.trim(), details: f.details.value.trim(), instructions: f.instructions.value.trim(), active: f.active.checked, order: intOrNull(f.order.value) ?? 0, createdAt: p?.createdAt || serverTimestamp(), updatedAt: serverTimestamp() };
+        try { await setDoc(p ? doc(db, "paymentMethods", p.id) : doc(collection(db, "paymentMethods")), data); closeModal(); toast("تم الحفظ"); }
+        catch (e) { err.textContent = errText(e); }
+      };
+    });
+  }
+
+  /* ============================================================
+     الفريق
+     ============================================================ */
+  function assignableRoles() {
+    const all = [...Object.entries(BUILTIN).map(([k, v]) => ({ key: k, label: v.label, rank: v.rank })), ...Object.entries(customRoles).map(([k, v]) => ({ key: k, label: v.name, rank: v.rank }))];
+    return isMain() ? all : all.filter(r => r.rank < me.rank);
+  }
+  function viewTeam(el) {
+    el.innerHTML = head("الفريق") + `<div class="panel"><h2>إضافة عضو</h2><form id="af" class="row" novalidate>
+        <input class="inp ltr" name="email" type="email" placeholder="Gmail الخاص بالعضو" style="flex:2;min-width:220px"><input class="inp" name="name" placeholder="الاسم (اختياري)" style="flex:1;min-width:140px">
+        <select class="inp" name="role" style="flex:1;min-width:140px">${assignableRoles().map(r => `<option value="${esc(r.key)}">${esc(r.label)}</option>`).join("")}</select><button class="btn" type="submit">إضافة</button></form>
+        <div class="err" id="err"></div><p class="note">تقدر تضيف أعضاء بدور أقل من دورك بس${isMain() ? " (كمالك رئيسي تقدر تضيف أي دور)" : ""}. العضو بيدخل بنفس الـ Gmail المكتوب هنا.${isMain() ? "" : " تعديل الأدوار والحذف للمالك الرئيسي فقط."}</p></div><div id="tb"></div>`;
+    let rows = [];
+    const draw = () => {
+      const all = [{ id: FOUNDER, email: FOUNDER, name: "المالك الرئيسي", role: "mainowner", founder: true }, ...rows];
+      $("#tb").innerHTML = table(["الإيميل", "الاسم", "الدور", "أضافه", ""], all.map(m => `<tr><td class="ltr">${esc(m.email)}</td><td>${esc(m.name || "—")}</td>
+        <td>${m.founder || !isMain() ? `<span class="chip">${esc(m.founder ? "المالك الرئيسي (ثابت)" : roleLabel(m.role))}</span>`
+          : `<select class="inp sm" data-role="${esc(m.id)}">${assignableRoles().concat(customRoles[m.role] || BUILTIN[m.role] ? [] : [{ key: m.role, label: m.role }]).map(r => `<option value="${esc(r.key)}" ${m.role === r.key ? "selected" : ""}>${esc(r.label)}</option>`).join("")}</select>`}</td>
+        <td class="ltr">${esc(m.addedBy || "—")}</td><td>${isMain() && !m.founder ? `<button class="btn sm danger" data-del="${esc(m.id)}">إزالة</button>` : ""}</td></tr>`), "");
+    };
+    $("#af").onsubmit = async ev => {
+      ev.preventDefault(); const f = ev.target, err = $("#err"); err.textContent = "";
+      const email = f.email.value.trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return err.textContent = "اكتب إيميل صحيح";
+      if (email === FOUNDER) return err.textContent = "ده المالك الرئيسي بالفعل";
+      try {
+        if ((await getDoc(doc(db, "team", email))).exists()) return err.textContent = "العضو ده مضاف بالفعل";
+        const data = { email, role: f.role.value, addedBy: me.email, addedAt: serverTimestamp() }; if (f.name.value.trim()) data.name = f.name.value.trim();
+        await setDoc(doc(db, "team", email), data); f.reset(); toast("تمت الإضافة");
+      } catch (e) { err.textContent = errText(e); }
+    };
+    el.onchange = async e => { const s = e.target.closest("[data-role]"); if (!s) return; try { await updateDoc(doc(db, "team", s.dataset.role), { role: s.value }); toast("تم تغيير الدور"); } catch (err) { toast(errText(err)); } };
+    el.onclick = async e => { const d = e.target.closest("[data-del]"); if (d && confirm("إزالة العضو وسحب صلاحية دخوله؟")) { try { await deleteDoc(doc(db, "team", d.dataset.del)); toast("تمت الإزالة"); } catch (err) { toast(errText(err)); } } };
+    listen(collection(db, "team"), snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (roleRank(b.role) - roleRank(a.role))); draw(); });
+  }
+
+  /* ============================================================
+     الأدوار (المالك الرئيسي فقط)
+     ============================================================ */
+  function viewRoles(el) {
+    el.innerHTML = head("الأدوار", `<button class="btn" id="add">+ دور مخصص</button>`) + `
+      <div class="panel"><h2>الأدوار الأساسية (ثابتة)</h2>${table(["الدور", "الترتيب", ...Object.values(SECTIONS)], Object.values(BUILTIN).sort((a, b) => a.rank - b.rank).map(r => `<tr><td><b>${esc(r.label)}</b></td><td>${r.rank}</td>${Object.keys(SECTIONS).map(s => `<td>${LEVELS[r.perms[s] || 0]}</td>`).join("")}</tr>`), "")}
+      <p class="note" style="margin-top:8px">الحذف النهائي للطلبات والتذاكر، وتعديل/إزالة الأعضاء، وإنشاء الأدوار: للمالك الرئيسي فقط.</p></div><div id="tb"></div>`;
+    let rows = [];
+    const draw = () => { $("#tb").innerHTML = `<div class="panel"><h2>الأدوار المخصصة</h2>${table(["الاسم", "المعرّف", "الترتيب", ...["overview", "orders", "tickets", "products", "discounts", "team"].map(s => SECTIONS[s]), ""], rows.map(r => `<tr><td><b>${esc(r.name)}</b></td><td class="ltr">${esc(r.id)}</td><td>${r.rank}</td>${["overview", "orders", "tickets", "products", "discounts", "team"].map(s => `<td>${LEVELS[r.perms?.[s] || 0]}</td>`).join("")}<td><button class="btn sm" data-edit="${esc(r.id)}">تعديل</button> <button class="btn sm danger" data-del="${esc(r.id)}">حذف</button></td></tr>`), "مفيش أدوار مخصصة.")}</div>`; };
+    el.onclick = async e => {
+      if (e.target.closest("#add")) return roleForm(null);
+      const ed = e.target.closest("[data-edit]"), dl = e.target.closest("[data-del]");
+      if (ed) roleForm(rows.find(r => r.id === ed.dataset.edit));
+      if (dl && confirm("حذف الدور؟ الأعضاء اللي عليه هيفقدوا الدخول لحد ما تغيّر دورهم.")) { try { await deleteDoc(doc(db, "roles", dl.dataset.del)); toast("تم الحذف"); } catch (err) { toast(errText(err)); } }
+    };
+    listen(collection(db, "roles"), snap => { rows = snap.docs.map(d => ({ id: d.id, ...d.data() })); draw(); });
+  }
+  function roleForm(r) {
+    const secs = ["overview", "orders", "tickets", "products", "discounts", "team"];
+    const v = r || { id: "", name: "", rank: 1, perms: { overview: 1, orders: 1 } };
+    const sel = (s, min) => `<select class="inp sm" name="p-${s}">${[0, 1, 2].filter(n => n >= min).map(n => `<option value="${n}" ${(v.perms?.[s] || min) === n || (v.perms?.[s] || 0) === n ? "selected" : ""}>${LEVELS[n]}</option>`).join("")}</select>`;
+    openModal(`<h2>${r ? "تعديل دور" : "دور مخصص جديد"}</h2><form id="rf" novalidate>
+      <div class="g2"><label class="field"><span>المعرّف * (إنجليزي صغير وأرقام و - _)</span><input class="inp ltr" name="key" maxlength="30" value="${esc(v.id)}" ${r ? "disabled" : ""}></label>
+        <label class="field"><span>الاسم الظاهر *</span><input class="inp" name="name" maxlength="40" value="${esc(v.name)}"></label></div>
+      <label class="field"><span>الترتيب في التدرّج (1 أقل من مستقبل طلبات... 3 أعلى من ادمن، تحت أونر)</span><select class="inp" name="rank">${[1, 2, 3].map(n => `<option value="${n}" ${v.rank === n ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+      <div class="permgrid">${secs.map(s => `<span>${SECTIONS[s]}</span>${sel(s, s === "overview" || s === "orders" ? 1 : 0)}`).join("")}</div>
+      <p class="note">كل الفريق لازم يشوف «نظرة عامة» و«الطلبات». المنتجات والفريق تحتاج ترتيب 2 فأكتر، والخصومات ترتيب 3. «طرق الدفع» و«الأدوار» حصريين للمالك الرئيسي.</p>
+      <div class="err" id="err"></div><div class="row"><button class="btn" type="submit">حفظ</button><button class="btn ghost" type="button" data-close>إلغاء</button></div></form>`, m => {
+      $("#rf", m).onsubmit = async ev => {
+        ev.preventDefault(); const f = ev.target, err = $("#err", m); err.textContent = "";
+        const key = r ? r.id : f.key.value.trim().toLowerCase(), rank = parseInt(f.rank.value, 10);
+        if (!/^[a-z0-9_-]{2,30}$/.test(key) || BUILTIN[key]) return err.textContent = "المعرّف غير صالح أو محجوز";
+        if (!f.name.value.trim()) return err.textContent = "الاسم مطلوب";
+        const perms = {}; secs.forEach(s => { const n = parseInt(f["p-" + s].value, 10); if (n > 0) perms[s] = n; });
+        if (perms.products && rank < 2) return err.textContent = "المنتجات تحتاج ترتيب 2 فأكتر";
+        if (perms.team && rank < 2) return err.textContent = "الفريق يحتاج ترتيب 2 فأكتر";
+        if (perms.discounts && rank < 3) return err.textContent = "أكواد الخصم تحتاج ترتيب 3";
+        try {
+          if (!r && (await getDoc(doc(db, "roles", key))).exists()) return err.textContent = "المعرّف مستخدم بالفعل";
+          await setDoc(doc(db, "roles", key), { name: f.name.value.trim(), rank, perms, createdAt: r?.createdAt || serverTimestamp() }); closeModal(); toast("تم الحفظ");
+        } catch (e) { err.textContent = errText(e); }
+      };
+    });
+  }
+
+  const VIEWS = { overview: viewOverview, orders: viewOrders, tickets: viewTickets, products: viewProducts, discounts: viewDiscounts, payments: viewPayments, team: viewTeam, roles: viewRoles };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AURABOT | بوتات ديسكورد</title>
+<meta name="description" content="AURABOT: بنصمم ونبيع بوتات ديسكورد جاهزة ومخصصة، ونتابع سيرفرك.">
+<link rel="icon" href="assets/logo-purple.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- كل خط في link مستقل: لو واحد فشل الباقي يشتغل -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wdth,wght@62.5..100,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#1f0039; --bg2:#0b0014;
+  --card1:#3a0070; --card2:#1d0038; --line:#ffffff;
+  --text:#ffffff; --muted:#bfaed3;
+  --brand:#a1007f; --brand2:#5a00a8;
+  --pill:#9a8fa5; --nav:#000000; --navpill:#808080; --navtext:#ffffff;
+  --danger:#ef4468; --ok:#2fd08a; --warn:#f5b53d;
+  --f-head:'Teko','Noto Sans Arabic','Tajawal',sans-serif;
+  --f-body:'Tajawal','Noto Sans Arabic',sans-serif;
+  --shadow:0 0 70px rgba(161,0,127,.35);
+}
+:root[data-theme="light"]{
+  --bg1:#f8f1ff; --bg2:#e9dbfa;
+  --card1:#ffffff; --card2:#f1e5ff; --line:#5a00a8;
+  --text:#1d0038; --muted:#6c4f86;
+  --pill:#b9a5d1; --navpill:#4a3a63;
+  --shadow:0 0 50px rgba(90,0,168,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{min-height:100vh;color:var(--text);font-family:var(--f-body);line-height:1.6;
+  background:radial-gradient(ellipse 120% 80% at 50% 0%,var(--bg1),var(--bg2) 75%) fixed;
+  display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hd{font-family:var(--f-head);font-stretch:75%;font-weight:400;letter-spacing:0}
+.wrap{width:min(1212px,100% - 32px);margin-inline:auto}
+
+/* ---------- navbar ---------- */
+.nav{position:sticky;top:12px;z-index:50;width:min(940px,100% - 24px);margin:12px auto 0;background:var(--nav);
+  border-radius:999px;padding:7px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.nav-links{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{white-space:nowrap;background:var(--navpill);color:var(--navtext);border-radius:12px;padding:1px 10px;
+  font-family:var(--f-head);font-stretch:75%;font-size:19px;line-height:1.5}
+.nav-links a.on{background:#17002b;color:var(--brand)}
+.nav-end{display:flex;align-items:center;gap:8px}
+.nav-end img{height:26px;width:auto}
+.brandmark{display:flex;align-items:center;gap:6px}
+.brandmark b{font-family:'Unbounded',var(--f-head);font-weight:900;font-size:13px;letter-spacing:.5px;
+  background:linear-gradient(90deg,#5a00a8,#d1009f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.iconbtn{background:#17002b;border:0;border-radius:999px;color:#fff;padding:3px 11px;font-size:15px;white-space:nowrap}
+.iconbtn:hover{background:#2a0050}
+.userchip{display:flex;align-items:center;gap:6px;font-size:14px;color:#fff;max-width:150px}
+.userchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- components ---------- */
+main{flex:1;padding:28px 0 56px}
+.pill{display:inline-block;background:var(--pill);color:#fff;border-radius:18px;padding:2px 18px;
+  font-family:var(--f-head);font-stretch:75%;font-size:28px;line-height:1.5}
+.sec{margin-top:36px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.btn{display:inline-block;border:0;border-radius:10px;background:linear-gradient(90deg,var(--brand2),var(--brand));
+  color:#fff;padding:6px 20px;font-family:var(--f-head);font-stretch:75%;font-size:20px;line-height:1.5;
+  box-shadow:0 6px 22px rgba(161,0,127,.35);transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.12)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;border:2px solid var(--line);box-shadow:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:24px}
+.card{position:relative;border:2px solid var(--line);border-radius:28px;padding:22px 20px;
+  background:radial-gradient(circle at 50% 50%,var(--card1),var(--card2));min-height:270px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.card h3{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:34px;line-height:1.3}
+.price{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+.price .amt{font-family:var(--f-head);font-size:56px;line-height:1}
+.price small{color:var(--muted);font-size:16px}
+.price .old{color:var(--muted);font-size:22px;font-family:var(--f-head)}
+.badge{position:absolute;top:-14px;right:30px;background:var(--danger);color:#fff;border-radius:999px;
+  padding:0 14px;font-size:14px;line-height:1.9}
+.gift{width:100%;border:2px dashed #a35bff;border-radius:20px;padding:12px 10px;margin-top:4px;
+  background:linear-gradient(90deg,rgba(90,0,168,.65),rgba(161,0,127,.65));color:#fff;
+  font-family:var(--f-head);font-stretch:75%;font-size:22px;line-height:1.4}
+.linkish{background:none;border:0;color:var(--muted);font-family:var(--f-head);font-stretch:75%;font-size:20px;margin-top:auto}
+.linkish:hover{color:var(--text);text-decoration:underline}
+.empty{border:2px dashed var(--line);border-radius:24px;padding:34px;text-align:center;color:var(--muted)}
+
+/* ---------- hero ---------- */
+.hero{margin-top:30px;border-radius:96px;padding:56px 64px;background:radial-gradient(circle at 50% 50%,#a1007f,#5a00a8);
+  display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:28px;color:#fff;position:relative;overflow:hidden;
+  box-shadow:0 0 90px rgba(161,0,127,.25)}
+.hero .tagpill{position:absolute;top:44px;right:64px;background:rgba(255,255,255,.32);border-radius:14px;padding:0 14px;
+  font-family:var(--f-head);font-stretch:75%;font-size:21px;line-height:1.7}
+.hero h1{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:clamp(36px,5.2vw,68px);line-height:1.22;margin-top:30px}
+.hero h1 .bw{font-family:'Unbounded',var(--f-head);font-weight:900;font-size:.62em;color:#1c0044;
+  text-shadow:0 0 18px rgba(255,255,255,.35);margin-inline-start:.2em;letter-spacing:1px}
+.hero p{margin-top:14px;font-size:clamp(17px,2vw,24px);opacity:.72;max-width:520px}
+.hero img{width:min(100%,460px);justify-self:center;filter:drop-shadow(0 12px 40px rgba(0,0,0,.25))}
+.hero .cta{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* ---------- steps / payments / faq ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.step{border:2px solid var(--line);border-radius:26px;padding:22px 16px;text-align:center;position:relative;
+  background:radial-gradient(circle at 50% 50%,var(--card1),var(--card2));min-height:200px}
+.step i{position:absolute;top:10px;right:50%;transform:translateX(50%);width:26px;height:26px;border-radius:50%;
+  background:var(--brand);color:#fff;font-style:normal;font-size:14px;display:grid;place-items:center}
+.step h3{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:36px;margin-top:22px}
+.step p{color:var(--muted);font-size:17px;margin-top:6px}
+.pay{border:2px solid var(--line);border-radius:22px;min-height:120px;display:grid;place-items:center;padding:14px;
+  background:radial-gradient(circle at 50% 50%,var(--card1),var(--card2));font-family:var(--f-head);font-stretch:75%;
+  font-size:44px;line-height:1.2;text-align:center;cursor:pointer;transition:transform .15s}
+.pay:hover{transform:translateY(-3px)}
+.faq details{border-radius:26px;background:linear-gradient(180deg,#44008a,#2a0058);border:1px solid rgba(255,255,255,.12);
+  margin-bottom:12px;padding:16px 24px;color:#fff}
+:root[data-theme="light"] .faq details{background:linear-gradient(180deg,#7a2bd1,#5a00a8)}
+.faq summary{cursor:pointer;list-style:none;font-family:var(--f-head);font-stretch:75%;font-size:30px;display:flex;gap:10px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"◂";font-size:18px}
+.faq details[open] summary::before{content:"▾"}
+.faq details p{margin-top:8px;color:rgba(255,255,255,.75);font-size:19px}
+.cta-end{text-align:center;margin-top:44px}
+.cta-end h2{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:46px}
+.cta-end p{color:var(--muted);font-family:var(--f-head);font-stretch:75%;font-size:30px;margin:4px 0 14px}
+
+/* ---------- forms / panels ---------- */
+.panel{border:2px solid var(--line);border-radius:28px;padding:26px;background:radial-gradient(circle at 50% 30%,rgba(90,0,168,.28),transparent 70%)}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start}
+.field{display:block;margin-bottom:16px}
+.field>span{display:block;font-size:15px;color:var(--muted);margin-bottom:4px}
+.inp{width:100%;border:2px solid var(--line);border-radius:20px;padding:12px 18px;font-size:17px;outline:0;
+  background:radial-gradient(circle at 50% 50%,var(--card1),var(--card2))}
+.inp:focus{box-shadow:0 0 0 3px rgba(161,0,127,.45)}
+textarea.inp{min-height:130px;resize:vertical}
+select.inp{appearance:none}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ticket,.msgbox{border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:12px 16px;margin-bottom:10px;cursor:pointer;
+  background:rgba(90,0,168,.25)}
+.ticket:hover{border-color:var(--brand)}
+.ticket h4{font-size:18px}
+.ticket small{color:var(--muted)}
+.chip{display:inline-block;border-radius:999px;padding:0 10px;font-size:13px;line-height:1.7;background:var(--brand2);color:#fff}
+.chip.new{background:var(--warn);color:#2a1d00}.chip.open,.chip.paid{background:#4b7bff}
+.chip.closed,.chip.delivered{background:var(--ok);color:#00331e}.chip.cancelled{background:var(--danger)}
+
+/* ---------- my orders ---------- */
+.orders-box{border:2px solid var(--line);border-radius:28px;padding:26px;background:rgba(0,0,0,.18)}
+.orders-box .pill{display:block;width:max-content;margin:0 auto 22px}
+.ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px}
+.order{border:2px solid var(--line);border-radius:22px;padding:16px 18px;background:radial-gradient(circle at 50% 50%,var(--card1),var(--card2));text-align:center}
+.order h3{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:34px;direction:ltr}
+.order .kv{display:flex;justify-content:space-between;gap:10px;font-family:var(--f-head);font-stretch:75%;font-size:22px;line-height:1.5}
+.order .note{font-family:var(--f-head);font-stretch:75%;font-size:21px;margin:4px 0 10px;color:var(--muted)}
+.btn.sm{font-size:16px;padding:2px 16px}
+
+/* ---------- about ---------- */
+.about{text-align:center;padding-top:20px}
+.about img{width:150px;margin:0 auto}
+.about .wm{font-family:'Unbounded',var(--f-head);font-weight:900;font-size:clamp(30px,6vw,52px);margin:8px 0 14px;
+  background:linear-gradient(90deg,#5a00a8,#d1009f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.about h2{font-family:var(--f-head);font-weight:400;font-size:clamp(32px,5vw,46px);direction:ltr}
+.about p{max-width:620px;margin:14px auto 0;font-family:var(--f-head);font-stretch:75%;font-size:clamp(22px,3vw,30px);line-height:1.6}
+
+/* ---------- modal / toast ---------- */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(5,0,12,.72);display:flex;align-items:flex-start;justify-content:center;
+  padding:5vh 14px;overflow:auto;backdrop-filter:blur(4px)}
+.sheet{width:min(560px,100%);border:2px solid var(--line);border-radius:28px;padding:26px;color:var(--text);
+  background:radial-gradient(circle at 50% 0%,var(--card1),var(--card2));box-shadow:0 0 80px rgba(161,0,127,.4);position:relative}
+.sheet h2{font-family:var(--f-head);font-stretch:75%;font-weight:400;font-size:38px;line-height:1.2;margin-bottom:8px}
+.sheet .x{position:absolute;top:12px;left:16px;background:none;border:0;color:var(--muted);font-size:26px}
+.sheet pre{white-space:pre-wrap;font-family:inherit;color:var(--muted);margin:8px 0 14px}
+.sum{border:1px dashed var(--line);border-radius:16px;padding:10px 14px;margin:10px 0;font-size:17px}
+.sum div{display:flex;justify-content:space-between}
+.sum .tot{font-weight:700;font-size:20px;border-top:1px solid rgba(255,255,255,.2);margin-top:6px;padding-top:6px}
+.err{color:#ff8aa0;font-size:15px;min-height:22px}
+.chat{max-height:42vh;overflow:auto;display:flex;flex-direction:column;gap:8px;margin:10px 0;padding:4px}
+.msg{max-width:84%;padding:8px 14px;border-radius:18px;background:rgba(255,255,255,.1);align-self:flex-start;white-space:pre-wrap;word-break:break-word}
+.msg.me{align-self:flex-end;background:linear-gradient(90deg,var(--brand2),var(--brand))}
+.msg small{display:block;opacity:.65;font-size:12px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;background:#17002b;color:#fff;border:1px solid var(--brand);
+  border-radius:14px;padding:10px 20px;box-shadow:0 8px 30px rgba(0,0,0,.4);max-width:90vw}
+footer{border-top:1px solid rgba(255,255,255,.08);text-align:center;padding:20px 12px;color:var(--muted);
+  font-family:var(--f-head);font-stretch:75%;font-size:20px}
+.setup{max-width:640px;margin:12vh auto;padding:28px;border:2px solid var(--line);border-radius:28px;background:rgba(0,0,0,.3)}
+.setup h1{font-family:var(--f-head);font-weight:400;font-size:40px}
+.setup code{direction:ltr;display:inline-block;background:rgba(255,255,255,.1);padding:0 8px;border-radius:8px}
+.loader{text-align:center;color:var(--muted);padding:60px 0}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;padding:84px 26px 34px;border-radius:56px;text-align:center}
+  .hero .tagpill{right:50%;transform:translateX(50%);top:28px}
+  .hero img{width:min(70%,280px);order:-1}
+  .hero p{margin-inline:auto}.hero .cta{justify-content:center}
+  .two{grid-template-columns:1fr}
+  .nav{border-radius:26px;flex-wrap:wrap}
+  .nav-links{order:2;flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, onSnapshot, query, where,
+         writeBatch, increment, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { firebaseConfig, discordInvite } from "./firebase-config.js";
+
+/* ============================================================
+   أدوات عامة
+   ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = n => Number(n || 0).toLocaleString("en-US");
+const fmtDate = ts => { try { return new Intl.DateTimeFormat("ar-EG-u-nu-latn", { dateStyle: "medium", timeStyle: "short" }).format(ts.toDate()); } catch { return ""; } };
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+
+// الأسئلة الشائعة (عدّلها من هنا)
+const FAQ = [
+  { q: "استلم البوت ازاي ؟", a: "بنضيفه لسيرفرك بنفسنا، أو نسلمك التوكن والملفات لو الاستضافة عندك." },
+  { q: "مدة التسليم قد ايه ؟", a: "بعد تأكيد الدفع الإدارة بتبدأ تجهّز البوت وتتواصل معاك على ديسكورد، وبنبلّغك بالمدة حسب نوع البوت." },
+  { q: "اعمل ايه لو البوت وقف او فيه مشكلة ؟", a: "افتح تذكرة دعم فني من صفحة التذاكر واشرح المشكلة، وبنتابع معاك لحد ما تتحل." }
+];
+const STATUS = { new: "تم الطلب", paid: "تم الدفع", delivered: "تم التسليم", cancelled: "ملغي" };
+const TSTATUS = { new: "جديدة", open: "مفتوحة", closed: "مغلقة" };
+const TTYPE = { support: "طلب دعم فني", complaint: "شكوى", inquiry: "استفسار" };
+
+const productDiscount = p => p.discountType === "fixed" ? Math.min(p.discountValue || 0, p.price)
+  : p.discountType === "percent" ? Math.floor(p.price * (p.discountValue || 0) / 100) : 0;
+const codeDiscount = (c, base) => c.type === "fixed" ? Math.min(c.value, base) : Math.floor(base * c.value / 100);
+
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; t.setAttribute("role", "status");
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3800);
+}
+let modalEl = null;
+function openModal(html, mount) {
+  closeModal();
+  modalEl = document.createElement("div"); modalEl.className = "modal";
+  modalEl.innerHTML = `<div class="sheet" role="dialog" aria-modal="true"><button class="x" aria-label="إغلاق" data-close>×</button>${html}</div>`;
+  modalEl.addEventListener("mousedown", e => { if (e.target === modalEl) closeModal(); });
+  modalEl.addEventListener("click", e => { if (e.target.closest("[data-close]")) closeModal(); });
+  document.body.appendChild(modalEl);
+  mount && mount(modalEl);
+  return modalEl;
+}
+function closeModal() { if (modalEl) { modalEl._cleanup && modalEl._cleanup(); modalEl.remove(); modalEl = null; } }
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+// ثيم (داكن افتراضي)
+const root = document.documentElement;
+root.dataset.theme = store.get("aura-theme") === "light" ? "light" : "dark";
+
+/* ============================================================
+   فحص إعدادات Firebase
+   ============================================================ */
+const cfgOk = Object.values(firebaseConfig).every(v => typeof v === "string" && v.trim() && !/[^\x00-\x7F]/.test(v));
+if (!cfgOk) {
+  $("#app").innerHTML = `<div class="setup"><h1>محتاج تضيف إعدادات Firebase</h1>
+    <p style="margin:12px 0">افتح الملف <code>firebase-config.js</code> في جذر المشروع واستبدل الجُمل العربية بقيم مشروعك من Firebase Console، وبعدها اعمل Commit وحدّث الصفحة.</p>
+    <p style="color:var(--muted)">الخطوات بالتفصيل في ملف README.md.</p></div>`;
+} else { main(); }
+
+function main() {
+  // هيكل الصفحة الثابت
+  $("#app").innerHTML = `<header><nav class="nav" id="nav" aria-label="التنقل الرئيسي"></nav></header><main id="view"><div class="loader">جارِ التحميل...</div></main><footer>© 2026 AURABOT، بوتات ديسكورد</footer>`;
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+
+  const S = { user: null, products: [], pays: [], orders: [], ordersLoaded: false, tickets: [], route: "home", authReady: false };
+  const unsubs = { orders: null, tickets: null };
+
+  /* ---------------- المصادقة ---------------- */
+  async function signIn() {
+    try { const r = await signInWithPopup(auth, provider); return r.user; }
+    catch (e) {
+      if (e.code === "auth/popup-blocked") toast("المتصفح منع نافذة الدخول، اسمح بالـ popups للموقع وجرّب تاني");
+      else if (!["auth/popup-closed-by-user", "auth/cancelled-popup-request"].includes(e.code)) toast("فشل تسجيل الدخول (" + (e.code || "error") + ")");
+      return null;
+    }
+  }
+  const logout = () => signOut(auth).then(() => toast("تم تسجيل الخروج"));
+  async function requireLogin() { return S.user || await signIn(); }
+
+  onAuthStateChanged(auth, user => {
+    S.user = user; S.authReady = true;
+    unsubs.orders && unsubs.orders(); unsubs.tickets && unsubs.tickets();
+    S.orders = []; S.tickets = []; S.ordersLoaded = false;
+    if (user) {
+      // طلباتي: استعلام مقيّد بـ uid (والـ Rules كمان بتمنع قراءة طلبات غيرك)
+      unsubs.orders = onSnapshot(query(collection(db, "orders"), where("uid", "==", user.uid)), snap => {
+        S.orders = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt?.toMillis?.() || 9e15) - (a.createdAt?.toMillis?.() || 9e15));
+        S.ordersLoaded = true; renderNav(); if (S.route === "orders") render();
+      }, e => { console.warn("orders", e.code); S.ordersLoaded = true; renderNav(); });
+      unsubs.tickets = onSnapshot(query(collection(db, "tickets"), where("uid", "==", user.uid)), snap => {
+        S.tickets = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt?.toMillis?.() || 9e15) - (a.createdAt?.toMillis?.() || 9e15));
+        S.route === "tickets" && updateTicketList();
+      }, e => console.warn("tickets", e.code));
+    } else { S.ordersLoaded = true; }
+    renderNav(); render();
+  });
+
+  /* ---------------- بيانات عامة ---------------- */
+  onSnapshot(collection(db, "products"), snap => {
+    S.products = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.active !== false)
+      .sort((a, b) => (a.createdAt?.toMillis?.() || 0) - (b.createdAt?.toMillis?.() || 0));
+    if (["home", "store"].includes(S.route)) render();
+  }, e => console.warn("products", e.code));
+  onSnapshot(collection(db, "paymentMethods"), snap => {
+    S.pays = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.active !== false).sort((a, b) => (a.order || 0) - (b.order || 0));
+    if (S.route === "home") render();
+  }, e => console.warn("payments", e.code));
+
+  // تسجيل زيارة واحدة في اليوم لكل متصفح (لمعدل التحويل في الـ Dashboard)
+  (async () => {
+    try {
+      const day = new Date().toISOString().slice(0, 10);
+      if (store.get("aura-visit") === day) return;
+      let vid = store.get("aura-vid");
+      if (!vid) { vid = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => (b % 36).toString(36)).join(""); store.set("aura-vid", vid); }
+      await setDoc(doc(db, "visits", day + "_" + vid), { d: day, t: serverTimestamp() });
+      store.set("aura-visit", day);
+    } catch (e) { /* مش مهم */ }
+  })();
+
+  /* ---------------- التنقل ---------------- */
+  const ROUTES = ["home", "store", "tickets", "about", "orders"];
+  function routeFromHash() { const r = (location.hash.replace(/^#\/?/, "") || "home"); return ROUTES.includes(r) ? r : "home"; }
+  window.addEventListener("hashchange", () => { S.route = routeFromHash(); closeModal(); render(); window.scrollTo(0, 0); });
+  S.route = routeFromHash();
+
+  function renderNav() {
+    const hasOrders = S.orders.length > 0;
+    const link = (r, t) => `<a href="#/${r === "home" ? "" : r}" class="${S.route === r ? "on" : ""}">${t}</a>`;
+    $("#nav").innerHTML = `
+      <div class="nav-links">${link("home", "الصفحة الرئيسية")}${link("store", "المتجر")}${link("tickets", "التذاكر")}${link("about", "من نحن")}${hasOrders ? link("orders", "طلباتي") : ""}</div>
+      <div class="nav-end">
+        <button class="iconbtn" data-act="theme" aria-label="تبديل الثيم">${root.dataset.theme === "dark" ? "☀" : "☾"}</button>
+        ${S.user ? `<div class="userchip" title="${esc(S.user.email)}"><span>${esc(S.user.displayName || S.user.email)}</span><button class="iconbtn" data-act="logout">خروج</button></div>`
+                 : `<button class="iconbtn" data-act="login">تسجيل الدخول بـ Google</button>`}
+        <a class="brandmark" href="#/"><img src="assets/logo-purple.png" alt="AURABOT"><b>AURABOT</b></a>
+      </div>`;
+  }
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter" && e.target.matches('[role="button"][data-act]')) e.target.click();
+  });
+  document.addEventListener("click", e => {
+    const a = e.target.closest("[data-act]"); if (!a) return;
+    const act = a.dataset.act, id = a.dataset.id;
+    if (act === "login") signIn();
+    else if (act === "logout") logout();
+    else if (act === "theme") { root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark"; store.set("aura-theme", root.dataset.theme); renderNav(); }
+    else if (act === "product") openProduct(id);
+    else if (act === "buy") openOrderForm(id);
+    else if (act === "pay") openPay(id);
+    else if (act === "ticket") openTicket(id);
+    else if (act === "orderchat") openOrderChat(id);
+  });
+
+  /* ---------------- الصفحات ---------------- */
+  function priceBlock(p) {
+    const pd = productDiscount(p), final = p.price - pd;
+    return `<div class="price"><span class="amt">${fmt(final)}</span><small>ج . م</small>${pd ? `<s class="old">${fmt(p.price)}</s>` : ""}</div>`;
+  }
+  function productCard(p) {
+    const badge = p.discountType === "percent" && p.discountValue > 0 ? `خصم ${p.discountValue}%`
+      : p.discountType === "fixed" && p.discountValue > 0 ? `خصم ${fmt(p.discountValue)} ج.م` : "";
+    return `<article class="card">${badge ? `<span class="badge">${badge}</span>` : ""}
+      <h3>${esc(p.name)}</h3>${priceBlock(p)}
+      ${p.gift ? `<div class="gift">🎁 هدية مجانية:<br>${esc(p.gift)}</div>` : ""}
+      <button class="linkish" data-act="product" data-id="${esc(p.id)}">تفاصيل المنتج</button></article>`;
+  }
+
+  const views = {
+    home() {
+      const feat = S.products.filter(p => p.featured).concat(S.products.filter(p => !p.featured)).slice(0, 4);
+      const invite = /^https:\/\/(discord\.gg|discord\.com)\//.test(discordInvite || "");
+      return `
+      <section class="hero wrap">
+        <span class="tagpill">الصفحة الرئيسية</span>
+        <div><h1>افضل خدمات شراء البوتات<br>بأفضل الاسعار<br>عند <span class="bw">AURABOT</span></h1>
+          <p>بنصمم ونبيع بوتات جاهزة ومخصصة، ونتابع سيرفرك. اختار الباقة، ونسلّمك البوت شغّال.</p>
+          <div class="cta"><a class="btn" href="#/store">تصفح البوتات</a></div></div>
+        <img src="assets/logo-white.png" alt="شعار AURABOT">
+      </section>
+      <section class="sec wrap"><div class="sec-head"><span class="pill">المنتجات :</span></div>
+        <div class="sec-head"><h2 class="hd" style="font-size:54px">الاكثر شرائا</h2><a class="btn" href="#/store">تصفح باقي البوتات ←</a></div>
+        ${feat.length ? `<div class="grid">${feat.map(productCard).join("")}</div>` : `<div class="empty">المنتجات هتظهر هنا أول ما الإدارة تضيفها.</div>`}</section>
+      <section class="sec wrap"><div class="sec-head"><span class="pill">ازاي اطلب بوت ؟</span></div>
+        <div class="steps">
+          <div class="step"><i>1</i><h3>اختار المنتج</h3><p>اختار المنتج اللي انت عايزة و اضغط شراء</p></div>
+          <div class="step"><i>2</i><h3>حوّل المبلغ</h3><p>اختار اي طريقة دفع من الموجودين و حول المبلغ</p></div>
+          <div class="step"><i>3</i><h3>أكّد الطلب</h3><p>من قسم طلباتي تقدر تكمل طلبك و تأكد عليه</p></div>
+          <div class="step"><i>4</i><h3>نسلّمك البوت</h3><p>بعد اكمال الشراء الادارة بتشغلك البوت على سيرفرك</p></div></div></section>
+      <section class="sec wrap"><div class="sec-head"><span class="pill">طرق الدفع المتاحة :</span></div>
+        ${S.pays.length ? `<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">${S.pays.map(p => `<div class="pay" role="button" tabindex="0" data-act="pay" data-id="${esc(p.id)}">${esc(p.name)}</div>`).join("")}</div>`
+          : `<div class="empty">طرق الدفع هتظهر هنا أول ما الإدارة تضيفها.</div>`}</section>
+      <section class="sec wrap faq"><div class="sec-head"><span class="pill">الاسئلة الشائعة :</span></div>
+        ${FAQ.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("")}</section>
+      <section class="cta-end wrap"><h2>جاهز نبدأ ؟</h2><p>ادخل سيرفر الديسكورد وقولنا إنت محتاج إيه.</p>
+        ${invite ? `<a class="btn" href="${esc(discordInvite)}" target="_blank" rel="noopener">خش سيرفر الديسكورد</a>` : `<a class="btn" href="#/tickets">كلمنا من التذاكر</a>`}</section>`;
+    },
+    store() {
+      return `<section class="wrap"><div class="sec-head"><span class="pill">المنتجات :</span></div>
+        ${S.products.length ? `<div class="grid" style="gap:28px">${S.products.map(productCard).join("")}</div>` : `<div class="empty">لسه مفيش منتجات. ارجع تاني قريب.</div>`}</section>`;
+    },
+    tickets() {
+      return `<section class="wrap"><span class="pill">التذاكر :</span>
+        <p style="margin:6px 0 20px;color:var(--muted)">ابعت طلب دعم أو شكوى وتابع الرد من هنا.</p>
+        <div class="two"><div class="panel">
+          ${S.user ? "" : `<div class="empty" style="margin-bottom:16px">لازم تسجّل الدخول بـ Google علشان تبعت تذكرة. <button class="btn sm" data-act="login">تسجيل الدخول</button></div>`}
+          <form id="tform" novalidate>
+            <label class="field"><span>نوع التذكرة</span><select class="inp" name="type">${Object.entries(TTYPE).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>
+            <label class="field"><span>عنوان الرسالة</span><input class="inp" name="title" maxlength="120" placeholder="عنوان الرسالة"></label>
+            <label class="field"><span>التفاصيل</span><textarea class="inp" name="body" maxlength="2000" placeholder="اشرح المشكلة بالتفصيل"></textarea></label>
+            <div class="err" id="terr"></div>
+            <button class="btn" id="tsend" type="submit">إرسال التذكرة</button>
+          </form></div>
+          <div class="panel"><span class="pill" style="font-size:24px">تذاكري :</span><div id="tlist" style="margin-top:14px"></div></div></div></section>`;
+    },
+    about() {
+      return `<section class="wrap about"><img src="assets/logo-white.png" alt="AURABOT"><div class="wm">AURABOT</div>
+        <h2>FOUNDER : Ahmed Gaber</h2>
+        <p>احنا AURABOT لبيع بوتات ديسكورد بأفضل الامكانيات والاسعار، البوتات بكذا نوع بتبدا من بوتات الترحيب البسيطة لحد بوتات السيستم الضخمة.</p></section>`;
+    },
+    orders() {
+      return `<section class="wrap"><div class="orders-box"><span class="pill">طلباتي :</span>
+        <div class="ogrid">${S.orders.map(o => `<div class="order"><h3>رقم الطلب : #${esc(o.id.slice(0, 6).toUpperCase())}</h3>
+          <div class="kv"><span>الطلب : ${esc(o.productName)}</span><span>الحالة : ${esc(STATUS[o.status] || o.status)}</span></div>
+          <div class="kv"><span>السعر : ${fmt(o.total)} ج.م</span><span>${esc(fmtDate(o.createdAt))}</span></div>
+          <div class="note">ملاحظات : ${[o.gift ? `يوجد معه بوت هدية ( ${esc(o.gift)} )` : "", o.codeUsed ? `كود الخصم ${esc(o.codeUsed)}` : "", esc(o.notes || "")].filter(Boolean).join(" — ") || "لا يوجد ملاحظات"}</div>
+          <button class="btn sm" data-act="orderchat" data-id="${esc(o.id)}">دردشة الطلب</button></div>`).join("")}</div></div></section>`;
+    }
+  };
+
+  function render() {
+    renderNav();
+    const v = $("#view");
+    // صفحة طلباتي: متاحة بس للعميل اللي عنده طلبات فعلًا
+    if (S.route === "orders") {
+      if (!S.authReady || (S.user && !S.ordersLoaded)) { v.innerHTML = `<div class="loader">جارِ التحميل...</div>`; return; }
+      if (!S.user || !S.orders.length) {
+        S.route = "home"; history.replaceState(null, "", "#/");
+        toast(S.user ? "صفحة طلباتي متاحة بعد ما تعمل أول طلب" : "سجّل الدخول الأول علشان تشوف طلباتك");
+        renderNav(); v.innerHTML = views.home(); return;
+      }
+    }
+    v.innerHTML = views[S.route]();
+    if (S.route === "tickets") { bindTicketForm(); updateTicketList(); }
+  }
+
+  /* ---------------- المنتج والطلب ---------------- */
+  const prod = id => S.products.find(p => p.id === id);
+  function openProduct(id) {
+    const p = prod(id); if (!p) return;
+    openModal(`<h2>${esc(p.name)}</h2>${priceBlock(p)}
+      ${p.description ? `<pre>${esc(p.description)}</pre>` : ""}${p.details ? `<pre>${esc(p.details)}</pre>` : ""}
+      ${p.gift ? `<div class="gift" style="margin-bottom:14px">🎁 هدية مجانية:<br>${esc(p.gift)}</div>` : ""}
+      <div class="row"><button class="btn" data-act="buy" data-id="${esc(p.id)}">شراء</button><button class="btn ghost" data-close>إغلاق</button></div>`);
+  }
+
+  async function openOrderForm(id) {
+    const p = prod(id); if (!p) return;
+    const user = await requireLogin(); if (!user) return;
+    const base = p.price - productDiscount(p);
+    let applied = null;
+    const m = openModal(`<h2>طلب: ${esc(p.name)}</h2>
+      <form id="oform" novalidate>
+        <label class="field"><span>الاسم *</span><input class="inp" name="name" maxlength="60" autocomplete="name" value="${esc(user.displayName || "")}"></label>
+        <label class="field"><span>يوزر الديسكورد *</span><input class="inp" name="discord" maxlength="40" dir="ltr" placeholder="username"></label>
+        <label class="field"><span>ملاحظات إضافية (اختياري)</span><textarea class="inp" name="notes" maxlength="500" style="min-height:80px"></textarea></label>
+        <div class="field"><span>كود الخصم (اختياري)</span><div class="row"><input class="inp" name="code" maxlength="24" dir="ltr" style="flex:1;min-width:140px;text-transform:uppercase"><button type="button" class="btn sm" id="capply">تطبيق</button></div></div>
+        <div class="sum" id="osum"></div><div class="err" id="oerr"></div>
+        <div class="row"><button class="btn" type="submit" id="osend">تأكيد الطلب</button><button class="btn ghost" type="button" data-close>إلغاء</button></div>
+      </form>`);
+    const f = $("#oform", m);
+    const sum = () => {
+      const cd = applied ? applied.discount : 0;
+      $("#osum", m).innerHTML = `<div><span>سعر المنتج</span><span>${fmt(p.price)} ج.م</span></div>
+        ${p.price - base ? `<div><span>خصم المنتج</span><span>- ${fmt(p.price - base)} ج.م</span></div>` : ""}
+        ${cd ? `<div><span>كود الخصم (${esc(applied.code)})</span><span>- ${fmt(cd)} ج.م</span></div>` : ""}
+        ${p.gift ? `<div><span>هدية مجانية</span><span>${esc(p.gift)}</span></div>` : ""}
+        <div class="tot"><span>الإجمالي</span><span>${fmt(base - cd)} ج.م</span></div>`;
+    };
+    sum();
+    $("#capply", m).onclick = async () => {
+      const err = $("#oerr", m); err.textContent = ""; applied = null;
+      const code = f.code.value.trim().toUpperCase();
+      if (!code) { sum(); return; }
+      try {
+        if (!/^[A-Z0-9_-]{2,24}$/.test(code)) throw new Error("كود الخصم غير صالح");
+        const s = await getDoc(doc(db, "discountCodes", code));
+        if (!s.exists()) throw new Error("كود الخصم مش موجود");
+        const c = s.data();
+        if (!c.active) throw new Error("الكود ده متوقف");
+        if (c.expiresAt && c.expiresAt.toMillis() <= Date.now()) throw new Error("الكود ده انتهت صلاحيته");
+        if (c.maxUses != null && c.usedCount >= c.maxUses) throw new Error("الكود ده وصل للحد الأقصى من الاستخدام");
+        if (c.minOrder != null && base < c.minOrder) throw new Error(`الكود ده للطلبات من ${fmt(c.minOrder)} ج.م فأكتر`);
+        if (c.productId && c.productId !== p.id) throw new Error("الكود ده مش لهذا المنتج");
+        applied = { code, discount: codeDiscount(c, base) }; toast("تم تطبيق الكود");
+      } catch (e) { err.textContent = e.message || "تعذّر التحقق من الكود"; }
+      sum();
+    };
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const err = $("#oerr", m), btn = $("#osend", m); err.textContent = "";
+      const name = f.name.value.trim(), discord = f.discord.value.trim(), notes = f.notes.value.trim();
+      if (name.length < 2) { err.textContent = "اكتب اسمك (حرفين على الأقل)"; return; }
+      if (discord.length < 2) { err.textContent = "يوزر الديسكورد مطلوب"; return; }
+      const typed = f.code.value.trim().toUpperCase();
+      if (typed && (!applied || applied.code !== typed)) { err.textContent = "اضغط «تطبيق» علشان نتأكد من كود الخصم، أو امسحه"; return; }
+      btn.disabled = true; btn.textContent = "جارِ الإرسال...";
+      try {
+        const cd = applied ? applied.discount : 0;
+        const ref = doc(collection(db, "orders"));
+        const batch = writeBatch(db);
+        batch.set(ref, {
+          uid: user.uid, email: user.email, customerName: name, discord, notes,
+          productId: p.id, productName: p.name, unitPrice: p.price, productDiscount: p.price - base,
+          codeUsed: applied ? applied.code : "", codeDiscount: cd, total: base - cd, gift: p.gift || "",
+          status: "new", createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+        });
+        if (applied) batch.update(doc(db, "discountCodes", applied.code), { usedCount: increment(1), lastOrderId: ref.id });
+        await batch.commit();
+        openModal(`<h2>تم استلام طلبك ✅</h2>
+          <p>رقم الطلب: <b dir="ltr">#${esc(ref.id.slice(0, 6).toUpperCase())}</b> — الإجمالي ${fmt(base - cd)} ج.م</p>
+          <p style="margin:10px 0;color:var(--muted)">حوّل المبلغ بأي طريقة دفع من دي، وبعدها كمّل طلبك من «طلباتي» وابعتلنا إثبات التحويل في دردشة الطلب.</p>
+          ${S.pays.length ? S.pays.map(x => `<div class="sum"><b>${esc(x.name)}</b>${x.details ? `<div style="display:block;direction:ltr;text-align:right">${esc(x.details)}</div>` : ""}${x.instructions ? `<div style="display:block;color:var(--muted)">${esc(x.instructions)}</div>` : ""}</div>`).join("") : `<div class="empty">الإدارة هتتواصل معاك بطرق الدفع.</div>`}
+          <div class="row" style="margin-top:12px"><a class="btn" href="#/orders" data-close>روح لطلباتي</a></div>`);
+      } catch (e) {
+        console.warn(e); btn.disabled = false; btn.textContent = "تأكيد الطلب";
+        err.textContent = e.code === "permission-denied" ? "الطلب اترفض: ممكن السعر أو الكود اتغيّر. حدّث الصفحة وجرّب تاني." : "حصل خطأ، جرّب تاني.";
+      }
+    };
+  }
+
+  function openPay(id) {
+    const x = S.pays.find(p => p.id === id); if (!x) return;
+    openModal(`<h2>${esc(x.name)}</h2>${x.details ? `<div class="sum" dir="ltr" style="text-align:left">${esc(x.details)}</div>` : ""}${x.instructions ? `<pre>${esc(x.instructions)}</pre>` : ""}
+      <button class="btn ghost" data-close>إغلاق</button>`);
+  }
+
+  /* ---------------- المحادثات (الطلبات والتذاكر) ---------------- */
+  function openThread({ title, head, path }) {
+    const m = openModal(`<h2>${esc(title)}</h2>${head || ""}<div class="chat" id="chat"></div>
+      <form id="cform" class="row"><input class="inp" name="text" maxlength="1000" placeholder="اكتب رسالتك..." style="flex:1;min-width:160px"><button class="btn sm" type="submit">إرسال</button></form><div class="err" id="cerr"></div>`);
+    const list = $("#chat", m);
+    m._cleanup = onSnapshot(query(collection(db, ...path)), snap => {
+      const rows = snap.docs.map(d => d.data()).sort((a, b) => (a.createdAt?.toMillis?.() || 9e15) - (b.createdAt?.toMillis?.() || 9e15));
+      list.innerHTML = rows.length ? rows.map(r => `<div class="msg ${r.uid === S.user?.uid ? "me" : ""}"><small>${r.from === "team" ? "فريق AURABOT" : "أنت"} · ${esc(fmtDate(r.createdAt))}</small>${esc(r.text)}</div>`).join("")
+        : `<div class="empty">مفيش رسائل لسه.</div>`;
+      list.scrollTop = list.scrollHeight;
+    }, e => { $("#cerr", m).textContent = "تعذّر تحميل الرسائل (" + e.code + ")"; });
+    $("#cform", m).onsubmit = async ev => {
+      ev.preventDefault(); const inp = ev.target.text, text = inp.value.trim(); if (!text) return;
+      inp.disabled = true;
+      try { await addDoc(collection(db, ...path), { from: "customer", uid: S.user.uid, text, createdAt: serverTimestamp() }); inp.value = ""; }
+      catch (e) { $("#cerr", m).textContent = "تعذّر الإرسال (" + (e.code || "error") + ")"; }
+      inp.disabled = false; inp.focus();
+    };
+  }
+  function openOrderChat(id) {
+    const o = S.orders.find(x => x.id === id); if (!o) return;
+    openThread({ title: `دردشة الطلب #${o.id.slice(0, 6).toUpperCase()}`, head: `<p style="color:var(--muted)">${esc(o.productName)} — ${esc(STATUS[o.status] || "")}</p>`, path: ["orders", id, "messages"] });
+  }
+
+  /* ---------------- التذاكر ---------------- */
+  function bindTicketForm() {
+    const f = $("#tform"); if (!f) return;
+    f.onsubmit = async ev => {
+      ev.preventDefault(); const err = $("#terr"); err.textContent = "";
+      const user = await requireLogin(); if (!user) return;
+      const title = f.title.value.trim(), body = f.body.value.trim();
+      if (title.length < 3) { err.textContent = "عنوان الرسالة قصير (3 حروف على الأقل)"; return; }
+      if (body.length < 5) { err.textContent = "اشرح المشكلة بالتفصيل (5 حروف على الأقل)"; return; }
+      const btn = $("#tsend"); btn.disabled = true;
+      try {
+        await addDoc(collection(db, "tickets"), { uid: user.uid, email: user.email, type: f.type.value, title, body, status: "new", createdAt: serverTimestamp(), lastReplyAt: serverTimestamp() });
+        f.title.value = ""; f.body.value = ""; toast("تم إرسال التذكرة ✅");
+      } catch (e) { err.textContent = "تعذّر إرسال التذكرة (" + (e.code || "error") + ")"; }
+      btn.disabled = false;
+    };
+  }
+  function updateTicketList() {
+    const el = $("#tlist"); if (!el) return;
+    el.innerHTML = !S.user ? `<div class="empty">سجّل الدخول علشان تشوف تذاكرك.</div>`
+      : S.tickets.length ? S.tickets.map(t => `<div class="ticket" role="button" tabindex="0" data-act="ticket" data-id="${esc(t.id)}"><div class="row" style="justify-content:space-between"><h4>${esc(t.title)}</h4><span class="chip ${esc(t.status)}">${esc(TSTATUS[t.status] || t.status)}</span></div><small>${esc(TTYPE[t.type] || "")} · ${esc(fmtDate(t.createdAt))}</small></div>`).join("")
+      : `<div class="empty" style="padding:18px">لا يوجد تذاكر</div>`;
+  }
+  function openTicket(id) {
+    const t = S.tickets.find(x => x.id === id); if (!t) return;
+    openThread({ title: t.title, head: `<p><span class="chip ${esc(t.status)}">${esc(TSTATUS[t.status] || "")}</span> <small style="color:var(--muted)">${esc(TTYPE[t.type] || "")}</small></p><pre>${esc(t.body)}</pre>`, path: ["tickets", id, "messages"] });
+  }
+
+  /* ---------------- تشغيل ---------------- */
+  render();
+}
+
+</script>
+</body>
+</html>
